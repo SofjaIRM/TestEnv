@@ -5,7 +5,7 @@ const { ok } = require("assert");
 const env = process.env.NODE_ENV || "dev";
 ok(env === "prod" || env === "dev" || env === "test", " A env é inválida");
 
-const configPath = join(__dirname, "..", "config", `.env.${env}`);
+const configPath = join(__dirname, "../config", `.env.${env}`);
 config({
   path: configPath,
 });
@@ -13,6 +13,7 @@ config({
 const Hapi = require('@hapi/hapi')
 const Context = require('./db/strategies/base/contextStrategy')
 const MongoDB = require('./db/strategies/mongodb/mongodb')
+const Joi = require('joi')
 
 const HeroRoutes = require('./routes/heroRoutes')
 const HeroSchema = require('./db/strategies/mongodb/schemas/heroisSchema')
@@ -80,6 +81,7 @@ async function main() {
 
     app.auth.default('jwt')
 
+    app.validator(Joi)
 
     app.route([
         ...mapRoutes(new HeroRoutes(mongoDb), HeroRoutes.methods()),
